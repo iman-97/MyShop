@@ -1,5 +1,4 @@
 ﻿using MyShop.Core.Models;
-using MyShop.Core.ViewModels;
 using MyShop.DataAccess.InMemory;
 using System;
 using System.Collections.Generic;
@@ -9,15 +8,13 @@ using System.Web.Mvc;
 
 namespace MyShop.WebUI.Controllers
 {
-    public class ProductManagerController : Controller
+    public class ProductCategoryManagerController : Controller
     {
-        ProductRepository _context;
-        ProductCategoryRepository _productCategory;
+        ProductCategoryRepository _context;
 
-        public ProductManagerController()
+        public ProductCategoryManagerController()
         {
-            _context = new ProductRepository();
-            _productCategory = new ProductCategoryRepository();
+            _context = new ProductCategoryRepository();
         }
 
         public ActionResult Index()
@@ -28,15 +25,12 @@ namespace MyShop.WebUI.Controllers
 
         public ActionResult Create()
         {
-            var viewModel = new ProductManagerViewModel();
-            viewModel.Product = new Product();
-            viewModel.ProductCategories = _productCategory.Collection();
-
-            return View(viewModel);
+            var product = new ProductCategory();
+            return View(product);
         }
 
         [HttpPost]
-        public ActionResult Create(Product product)
+        public ActionResult Create(ProductCategory product)
         {
             if (ModelState.IsValid == false)
                 return View(product);
@@ -54,17 +48,11 @@ namespace MyShop.WebUI.Controllers
             if (product == null)
                 return HttpNotFound();
             else
-            {
-                var viewModel = new ProductManagerViewModel();
-                viewModel.Product = product;
-                viewModel.ProductCategories = _productCategory.Collection();
-
-                return View(viewModel);
-            }
+                return View(product);
         }
 
         [HttpPost]
-        public ActionResult Edit(Product product, string id)
+        public ActionResult Edit(ProductCategory product, string id)
         {
             if (ModelState.IsValid == false)
                 return View(product);
@@ -75,12 +63,7 @@ namespace MyShop.WebUI.Controllers
                 return HttpNotFound();
             else
             {
-                productToEdit.Name = product.Name;
                 productToEdit.Category = product.Category;
-                productToEdit.Description = product.Description;
-                productToEdit.Image = product.Image;
-                productToEdit.Price = product.Price;
-
                 _context.Commit();
 
                 return RedirectToAction("Index");
