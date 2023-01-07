@@ -96,6 +96,13 @@ namespace MyShop.Services
             return model;
         }
 
+        public void ClearBasket(HttpContextBase httpContext)
+        {
+            var basket = GetBasket(httpContext, false);
+            basket.BasketItems.Clear();
+            _basketContext.Commit();
+        }
+
         private Basket GetBasket(HttpContextBase httpContext, bool createIfNull)
         {
             //getting user cookies
